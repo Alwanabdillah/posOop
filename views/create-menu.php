@@ -1,3 +1,29 @@
+<?php
+
+require_once __DIR__ . '/../Model/Category.php';
+require_once __DIR__ . '/../Model/Model.php';
+require_once __DIR__ . '/../Model/Item.php';
+
+$categoriesModel = new Category();
+$categories = $categoriesModel->all(); // Mengambil semua kategori
+
+$menu = new Item();
+
+if (isset($_POST["submit"])) {
+    var_dump($_FILES);
+    $datas = [
+        "post" => $_POST,
+        "files" => $_FILES
+    ];
+    $result = $menu->create($datas);
+    if(gettype($result) == "string"){
+        echo "<script>alert('{$result}'); window.location.href = 'create-menu.php';</script>";
+    }else{
+        echo "<script>alert('Menu created successfully'); window.location.href = 'create-menu.php';</script>";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,10 +35,6 @@
     <!-- General CSS Files -->
     <link rel="stylesheet" href="../assets/modules/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/modules/fontawesome/css/all.min.css">
-
-    <!-- CSS Libraries -->
-
-    <!-- Template CSS -->
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/components.css">
     <link rel="stylesheet" href="../assets/modules/bootstrap-daterangepicker/daterangepicker.css">
@@ -21,24 +43,6 @@
     <link rel="stylesheet" href="../assets/modules/jquery-selectric/selectric.css">
     <link rel="stylesheet" href="../assets/modules/bootstrap-timepicker/css/bootstrap-timepicker.min.css">
     <link rel="stylesheet" href="../assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.css">
-    <!-- jquery -->
-    <link rel="stylesheet" href="../assets/modules/jquery-selectric/selectric.css">
-    <link rel="stylesheet" href="../assets/modules/select2/dist/css/select2.min.css">
-    <script src="../assets/modules/jquery-pwstrength/jquery.pwstrength.min.js"></script>
-    <script src="../assets/modules/jquery-selectric/jquery.selectric.min.js"></script>
-    <!-- Start GA -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-94034622-3');
-    </script>
-    <!-- /END GA -->
 </head>
 
 <body>
@@ -47,11 +51,12 @@
             <div class="navbar-bg"></div>
             <?php include './../components/layout/navbar.php'; ?>
             <?php include './../components/layout/sidebar.php'; ?>
+
             <!-- Main Content -->
             <div class="main-content">
                 <section class="section">
                     <div class="section-header">
-                        <h1>Blank Page</h1>
+                        <h1>Create Menu</h1>
                     </div>
 
                     <div class="section-body">
@@ -61,52 +66,47 @@
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <div class="card">
-
-                                    <div class="card-body">
-                                        <div class="form-group">
-                                            <label>Nama Menu</label>
-                                            <input type="text" class="form-control">
-                                        </div>
-                                        <div class="form-group d-flex flex-column">
-                                            <label class="form-control-label">Gambar</label>
-                                            <div class="custom-file">
-                                                <input type="file" name="site_favicon" class="custom-file-input" id="site-favicon">
-                                                <label class="custom-file-label">Choose File</label>
+                                    <form action="" method="post" class="card-body" enctype="multipart/form-data">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Nama Menu</label>
+                                                <input type="text" name="name" id="name" class="form-control" required>
                                             </div>
-                                            <div class="form-text text-muted">The image must have a maximum size of 1MB</div>
+                                            <div class="form-group d-flex flex-column">
+                                                <label for="attachment" class="form-control-label">Gambar</label>
+                                                <div class="custom-file">
+                                                    <input type="file" name="attachment" id="attachment" class="custom-file-input" required>
+                                                    <label class="custom-file-label" for="attachment">Choose File</label>
+                                                </div>
+                                                <div class="form-text text-muted">The image must have a maximum size of 1MB</div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="category_id">Pilih Kategori</label>
+                                                <select name="category_id" id="category_id" class="form-control" required>
+                                                    <?php foreach ($categories as $category) : ?>
+                                                        <option value="<?= htmlspecialchars($category["id"]) ?>"><?= htmlspecialchars($category["name"]) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="price">Harga</label>
+                                                <input name="price" id="price" type="number" class="form-control" required>
+                                            </div>
                                         </div>
-                                        <input id="attacment" type="file" hidden class="form-control">
-                                        <div class="form-group">
-                                            <label>Pilih Kategori</label>
-                                            <select class="form-control selectric" multiple="">
-                                                <option>Option 1</option>
-                                                <option>Option 2</option>
-                                                <option>Option 3</option>
-                                                <option>Option 4</option>
-                                                <option>Option 5</option>
-                                                <option>Option 6</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Harga</label>
-                                            <input type="number" class="form-control">
-                                        </div>
-                                    </div>
 
-                                    <div class="d-flex justify-content-end">
-                                        <button class="btn btn-primary">Tambahkan</button>
-                                    </div>
+                                        <div class="d-flex justify-content-end">
+                                            <button name="submit" id="submit" type="submit" class="btn btn-primary">Tambahkan</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
 
                     </div>
-                    
+                </section>
             </div>
-            </section>
+            <?php include './../components/layout/footer.php'; ?>
         </div>
-        <?php include './../components/layout/footer.php'; ?>
-    </div>
     </div>
 
     <!-- General JS Scripts -->
@@ -126,9 +126,6 @@
     <script src="../assets/modules/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
     <script src="../assets/modules/select2/dist/js/select2.full.min.js"></script>
     <script src="../assets/modules/jquery-selectric/jquery.selectric.min.js"></script>
-    <!-- JS Libraies -->
-
-    <!-- Page Specific JS File -->
 
     <!-- Template JS File -->
     <script src="../assets/js/scripts.js"></script>

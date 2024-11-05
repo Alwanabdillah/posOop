@@ -1,3 +1,14 @@
+<?php
+
+require_once __DIR__ . '/../Model/Model.php';
+require_once __DIR__ . '/../Model/Item.php';
+require_once __DIR__ . '/../Model/Category.php';
+
+$categories = new Category();
+$menus = new Item();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -106,16 +117,16 @@
                                     </div>
                                     <div class="card-stats-items">
                                         <div class="card-stats-item">
-                                            <div class="card-stats-item-count">24</div>
-                                            <div class="card-stats-item-label">Pending</div>
+                                            <div class="card-stats-item-count"><?= count($categories->all()) ?></div>
+                                            <div class="card-stats-item-label">Kategori</div>
                                         </div>
                                         <div class="card-stats-item">
-                                            <div class="card-stats-item-count">12</div>
-                                            <div class="card-stats-item-label">Shipping</div>
+                                            <div class="card-stats-item-count"><?= count($menus->all()) ?></div>
+                                            <div class="card-stats-item-label">Menu</div>
                                         </div>
                                         <div class="card-stats-item">
-                                            <div class="card-stats-item-count">23</div>
-                                            <div class="card-stats-item-label">Completed</div>
+                                            <div class="card-stats-item-count">3</div>
+                                            <div class="card-stats-item-label">Karyawan</div>
                                         </div>
                                     </div>
                                 </div>
@@ -124,9 +135,9 @@
                                 </div>
                                 <div class="card-wrap">
                                     <div class="card-header">
-                                        <h4>Total Orders</h4>
+                                        <h4>Menu</h4>
                                     </div>
-                                    <div class="card-body">59</div>
+                                    <div class="card-body"><?= count($menus->all()) ?></div>
                                 </div>
                             </div>
                         </div>
